@@ -1,13 +1,12 @@
 import User from '../model/user';
-import Friend from '../model/friend';
 import { Request, Response } from 'express';
 
 
 // Get all friends
-export const getFriends = async (_req: Request, res: Response) => {
+export const getUsers = async (_req: Request, res: Response) => {
   try {
-    const friends = await Friend.find();
-    res.json(friends);
+    const users = await User.find();
+    res.json(users);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -15,27 +14,43 @@ export const getFriends = async (_req: Request, res: Response) => {
 
 
 // Get a single friend by ID
-export const getSingleFriend = async (req: Request, res: Response) => {
+export const getSingleUsers = async (req: Request, res: Response) => {
   try {
-    const friend = await Friend.findOne({ _id: req.params.friendId });
-    if (!friend) {
+    const user = await User.findOne({ _id: req.params.userId });
+    if (!user) {
       res.status(404).json({ message: 'No friend with that ID' });
     } else {
-      res.json(friend);
+      res.json(user);
     }
   } catch (err) {
     res.status(500).json(err);
   }
 };
 
+//create user
+export const createUser= async (req: Request, res: Response) => {
+  try {
+    const user = await User.create(req.body);
+    
+    if (!user) {
+      res
+        .status(404)
+        .json({ message: 'Friend added, but found no user with that ID' });
+    } else {
+      res.json('Friend added successfully :tada:');
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
 
 // Create a new friend
 export const createFriend = async (req: Request, res: Response) => {
   try {
-    const friend = await Friend.create(req.body);
+    // const friend = await User.create(req.body);
     const user = await User.findOneAndUpdate(
       { _id: req.body.userId },
-      { $addToSet: { friends: friend._id } },
+      { $addToSet: { friends: req.body.friendId } },
       { new: true }
     );
     if (!user) {
@@ -54,8 +69,12 @@ export const createFriend = async (req: Request, res: Response) => {
 // Delete a friend by ID
 export const deleteFriend = async (req: Request, res: Response) => {
   try {
-    const friend = await Friend.findOneAndDelete({ _id: req.params.friendId });
-    if (!friend) {
+    const user = await User.findOneAndUpdate(
+      { _id: req.body.userId },
+      { $pull: { friends: req.body.friendId } },
+      { new: true }
+    );
+    if (!user) {
       res.status(404).json({ message: 'No friend with that ID' });
     } else {
       res.json({ message: 'Friend deleted successfully' });
