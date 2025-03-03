@@ -1,4 +1,4 @@
-import User from '../model/user';
+import User from '../model/user.js';
 import { Request, Response } from 'express';
 
 
@@ -29,6 +29,7 @@ export const getSingleUsers = async (req: Request, res: Response) => {
 
 //create user
 export const createUser= async (req: Request, res: Response) => {
+  console.log(req.body)
   try {
     const user = await User.create(req.body);
     
@@ -49,8 +50,8 @@ export const createFriend = async (req: Request, res: Response) => {
   try {
     // const friend = await User.create(req.body);
     const user = await User.findOneAndUpdate(
-      { _id: req.body.userId },
-      { $addToSet: { friends: req.body.friendId } },
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
       { new: true }
     );
     if (!user) {
@@ -70,8 +71,8 @@ export const createFriend = async (req: Request, res: Response) => {
 export const deleteFriend = async (req: Request, res: Response) => {
   try {
     const user = await User.findOneAndUpdate(
-      { _id: req.body.userId },
-      { $pull: { friends: req.body.friendId } },
+      { _id: req.params.userId },
+      { $pull: { friends: req.params.friendId } },
       { new: true }
     );
     if (!user) {

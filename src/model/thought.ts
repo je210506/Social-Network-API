@@ -1,6 +1,6 @@
 // Import schema and model from mongoose
 import { Schema, model, Document, Types } from "mongoose";
-import React from "./reaction"; // Import the Reaction schema
+import React from "./reaction.js"; // Import the Reaction schema
 
 
 // Define an interface for the Thought document
@@ -82,11 +82,11 @@ thoughtSchema.virtual("reactionCount").get(function () {
 const Thought = model<IThought>("Thought", thoughtSchema);
 
 // Create a new instance of the model, a document
-Thought.create({
-  thoughtText: "This is my first thought!",
-  username: "lulovesu",
-})
-  .then((result) => console.log("Created new document", result))
-  .catch((err) => console.log(err));
+// Thought.create({
+//   thoughtText: "This is my first thought!",
+//   username: "lulovesu",
+// })
+//   .then((result) => console.log("Created new document", result))
+//   .catch((err) => console.log(err));
 
 export default Thought;

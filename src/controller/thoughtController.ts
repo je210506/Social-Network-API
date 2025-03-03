@@ -1,5 +1,5 @@
-import Thought from '../model/thought';
-import User from '../model/user';
+import Thought from '../model/thought.js';
+import User from '../model/user.js';
 import { Request, Response } from 'express';
 
 
@@ -42,7 +42,7 @@ export const updateThought = async (req: Request, res:Response) => {
     try {
         const thought = await Thought.findOneAndUpdate(
             {_id: req.params.thoughtId},
-            { $set: {videos: req.params.thoughtId} },
+            { $set: req.body},
             {new: true, runValidators: true},
         );
         
@@ -57,3 +57,48 @@ export const updateThought = async (req: Request, res:Response) => {
         return;
     }
 }
+
+// Create a new reaction for a specific thought
+export const createReaction = async (req: Request, res: Response) => {
+  try {
+    console.log(req.body)
+    const thought = await Thought.findByIdAndUpdate(
+      req.params.thoughtId,
+      { $push: { reactions: req.body} },
+      { new: true, runValidators: true }
+    );
+
+    if (!thought) {
+    res.status(404).json({ message: "No thought found with that ID!" });
+    return;
+    }
+
+    res.json(thought);
+    return;
+  } catch (err) {
+    res.status(500).json(err);
+    return;
+  }
+};
+
+// Delete a reaction from a thought
+export const deleteReaction = async (req: Request, res: Response) => {
+  try {
+    const thought = await Thought.findByIdAndUpdate(
+      req.params.thoughtId,
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      { new: true }
+    );
+
+    if (!thought) {
+      res.status(404).json({ message: "No thought found with that ID!" });
+      return;
+    }
+
+    res.json(thought);
+    return;
+  } catch (err) {
+    res.status(500).json(err);
+    return;
+  }
+};
