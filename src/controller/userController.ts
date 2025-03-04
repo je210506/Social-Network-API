@@ -2,7 +2,7 @@ import User from '../model/user.js';
 import { Request, Response } from 'express';
 
 
-// Get all friends
+// Get all users
 export const getUsers = async (_req: Request, res: Response) => {
   try {
     const users = await User.find();
@@ -44,6 +44,43 @@ export const createUser= async (req: Request, res: Response) => {
     res.status(500).json(err);
   }
 };
+
+//delete user
+export const deleteUser = async (req: Request, res: Response) => {
+  console.log(req.params)
+  try {
+    const user = await User.findByIdAndDelete(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'No user found with that ID' });
+    }
+
+    return res.json({ message: 'User deleted successfully 🎉' });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+};
+
+//update a thought
+export const updateUser = async (req: Request, res:Response) => {
+  try {
+      const user = await User.findOneAndUpdate(
+          {_id: req.params.userId},
+          { $set: req.body},
+          {new: true, runValidators: true},
+      );
+      
+      if (!user) {
+          return res.status(404).json({message: 'Could not update user!'})
+      }
+
+      res.json(user);
+      return;
+  } catch(err) {
+      res.status(500).json(err);
+      return;
+  }
+}
 
 // Create a new friend
 export const createFriend = async (req: Request, res: Response) => {

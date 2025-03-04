@@ -2,7 +2,7 @@ import Thought from '../model/thought.js';
 import User from '../model/user.js';
 import { Request, Response } from 'express';
 
-
+//get thoughts
 export const getThoughts = async (_req: Request, res: Response) => {
     try {
         const thoughts = await Thought.find();

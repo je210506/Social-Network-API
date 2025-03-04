@@ -81,12 +81,4 @@ thoughtSchema.virtual("reactionCount").get(function () {
 // Using model() to compile a model based on the schema 'thoughtSchema'
 const Thought = model<IThought>("Thought", thoughtSchema);
 
-// Create a new instance of the model, a document
-// Thought.create({
-//   thoughtText: "This is my first thought!",
-//   username: "lulovesu",
-// })
-//   .then((result) => console.log("Created new document", result))
-//   .catch((err) => console.log(err));
-
 export default Thought;

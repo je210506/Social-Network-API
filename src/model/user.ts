@@ -1,6 +1,5 @@
 // Import schema and model from mongoose
 import { Schema, model, Document, Types} from 'mongoose';
-// import Thought from '../model/thought';
 
 // Define an interface for the Book document
 interface IUser extends Document {
@@ -48,16 +47,10 @@ const userSchema = new Schema<IUser>({
 );
 
 
-// Using model() to compile a model based on the schema 'bookSchema'
+// Using model() to compile a model based on the schema 'userSchema'
 const User = model<IUser>("User", userSchema);
-// Create a new instance of the model, a document
-// User.create({
-//     username: "lulovesu",
-//     email: "lillian@gmail.com",
-//     thoughts: [],
-//     friends: [],
-//   })
-//     .then((result) => console.log("Created new document", result))
-//     .catch((err) => console.log(err));
-  
+
+
+
+
   export default User;
