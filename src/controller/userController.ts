@@ -1,5 +1,6 @@
 import User from '../model/user.js';
 import { Request, Response } from 'express';
+import Thought from '../model/thought.js';
 
 
 // Get all users
@@ -47,17 +48,21 @@ export const createUser= async (req: Request, res: Response) => {
 
 //delete user
 export const deleteUser = async (req: Request, res: Response) => {
-  console.log(req.params)
   try {
-    const user = await User.findByIdAndDelete(req.params.userId);
+    const user = await User.findOneAndDelete(
+      {_id: req.params.userId}
+    );
 
     if (!user) {
       return res.status(404).json({ message: 'No user found with that ID' });
+    } 
+    if (user.thoughts && user.thoughts.length > 0) {
+      await Thought.deleteMany({ _id: { $in: user.thoughts } });
     }
 
-    return res.json({ message: 'User deleted successfully 🎉' });
+    return res.json({ message: 'User and their thoughts have been deleted!' });
   } catch (err) {
-    return res.status(500).json(err);
+    return res.status(500).json({ message: 'Server error', error: err });
   }
 };
 
