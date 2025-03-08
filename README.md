@@ -42,7 +42,7 @@ npm run build
 npm run start
 ```
 
-Your portfolio should now be running locally at ```http://localhost:3001``` (or a different port if specified).
+Your website should now be running locally at ```http://localhost:3001``` (or a different port if specified).
 
 
 ## Usage 
